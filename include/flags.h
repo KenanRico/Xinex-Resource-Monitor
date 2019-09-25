@@ -11,7 +11,8 @@ namespace Flags{
 		PORTS = 3,
 		HELP = 4
 	};
-	constexpr int X = 5;
+	constexpr unsigned int X = 5;
+	constexpr unsigned int num_attribs = X-1;
 	const std::string table[X] = {"m", "c", "f", "p", "h"};
 };
 

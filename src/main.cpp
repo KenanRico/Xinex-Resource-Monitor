@@ -19,7 +19,7 @@ int main(int argc, char** argv){
 	}
 
 	/*
-	std::vector<Process<Flags::X-1>> processes;
+	std::vector<Process<Flags::num_attribs>> processes;
 	GetProcesses(&processes);
 
 	int proccount = processes.size();
