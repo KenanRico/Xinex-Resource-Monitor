@@ -7,20 +7,33 @@
 
 
 int main(int argc, char** argv){
-	/*parse flags*/
-	std::array<bool, Flags::X> enabled_flags;
-	uint8_t status = ParseFlags(argc, argv, &enabled_flags);
+	/*parse attribs*/
+	std::array<bool, Attrib::num_attribs> attribs;
+	uint8_t status = Input::Attribs::ParseFlags(argc, argv, &attribs);
 	if(status!=0){
-		std::cout<<"Error!\n";
-		exit(0);
+		std::cout<<"attrib flag error!\n";
+		exit(1);
 	}
-	if(enabled_flags[Flags::HELP]){
-		// print help page
+	/*parse orientation*/
+	unsigned int ori = 0;
+	status = Input::Orientation::ParseOrientation(argc, argv, &ori);
+	if(status!=0){
+		std::cout<<"orientation flag error!\n";
+		exit(1);
+	}
+	/*parse order*/
+	unsigned int ord = 0;
+	status = Input::Order::ParseOrder(argc, argv, &ord);
+	if(status!=0){
+		std::cout<<"order flag error!\n";
+		exit(1);
 	}
 
 	/*
-	std::vector<Process<Flags::num_attribs>> processes;
+	Processes processes;
+	processes.SetSortOrder(ori, ord);
 	GetProcesses(&processes);
+	processes.GetProcesses();
 
 	int proccount = processes.size();
 	for(int i=0; i<proccount; ++i){
