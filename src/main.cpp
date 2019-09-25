@@ -15,7 +15,7 @@ int main(int argc, char** argv){
 		exit(0);
 	}
 	if(enabled_flags[Flags::HELP]){
-		// ?
+		// print help page
 	}
 
 	/*
