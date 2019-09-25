@@ -1,6 +1,9 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
+#include <string>
+#include <windows.h>
+
 
 class Process;
 using ProcFuncPtr = void(Process::*)();
@@ -12,11 +15,13 @@ class Process{
 		ProcFuncPtr proc_func[N];
 		std::string msg;
 	public:
-		inline const std::string& GetMsg() const { return msg; }
+		void AppendAttrib(unsigned int);
 		void GenerateMemoryProfile();
 		void GenerateCPUProfile();
 		void GenerateOpenFileProfile();
 		void GenerateOpenPortProfile();
+		/*inlines*/
+		inline const std::string& GetMsg() const { return msg; }
 		
 	public:
 		Process(DWORD);
@@ -26,3 +31,5 @@ class Process{
 		Process(const Process&) = delete;
 		Process& operator=(const Process&) = delete;
 };
+
+#endif
