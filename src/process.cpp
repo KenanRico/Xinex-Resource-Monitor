@@ -13,14 +13,33 @@
 #define QUERY_PNAME_FAILURE 3
 
 
-Process::Process(DWORD pid): process_ID(pid), status(OK){
+Process::Process(DWORD pid, const std::array<bool, Flags::num_attribs>& attribs): process_ID(pid), attrib_count(0), status(OK){
+  /*get hanle and name*/
 	process_handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, process_ID);
   GetName();
   /*set up function ptr table*/
-	proc_func[Flags::MEMORY] = &Process::GenerateMemoryProfile;
-	proc_func[Flags::CPU] = &Process::GenerateCPUProfile;
-	proc_func[Flags::FILES] = &Process::GenerateOpenFileProfile;
-	proc_func[Flags::PORTS] = &Process::GenerateOpenPortProfile;
+  for(int i=0; Flags::num_attribs; ++i){
+    switch(attribs[i]){
+      case Flags::CPU:
+        proc_func.push_back(&Process::GenerateCPUProfile);
+        ++attrib_count;
+        break;
+      case Flags::MEMORY:
+        proc_func.push_back(&Process::GenerateMemoryProfile);
+        ++attrib_count;
+        break;
+      case Flags::FILES:
+        proc_func.push_back(&Process::GenerateFileProfile);
+        ++attrib_count;
+        break;
+      case Flags::PORTS:
+        proc_func.push_back(&Process::GeneratePortProfile);
+        ++attrib_count;
+        break;
+      default:
+        break;
+    }
+  }
 }
 
 Process::Process(const Process& rhs){
@@ -95,6 +114,6 @@ void GetProcesses(std::vector<Process>* processes){
 	EnumProcesses(process_pool, MAX_P_COUNT*sizeof(DWORD), &process_count_bytes);
 	unsigned int process_count = process_count_bytes/sizeof(DWORD);
 	for(DWORD i=0; i<process_count; ++i){
-		processes->push_back(Process(process_pool[i]));
+		processes->push_back(Process(process_pool[i]), const std::array<bool, Flags::num_attribi>&);
 	}
 }

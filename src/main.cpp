@@ -21,15 +21,14 @@ int main(int argc, char** argv){
 	}
 
 	std::vector<Process> processes;
-	GetProcesses(&processes);
+	GetProcesses(&processes, enabled_flags);
 
 	unsigned int proccount = processes.size();
 	for(unsigned int i=0; i<proccount; ++i){
 		Process& proc = processes[i];
-		for(unsigned int j=0; j<Flags::num_attribs; ++j){
-			if(enabled_flags[j]){
-				proc.AppendAttrib(j);
-			}
+    int attrib_count = proc->CountAttribs();
+		for(int j=0; j<attrib_count; ++j){
+      proc.AppendAttrib(j);
 		}
 	}
 

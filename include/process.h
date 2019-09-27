@@ -23,7 +23,8 @@ class Process{
 		std::string process_name;
     HANDLE process_handle;
     /*attribute resources*/
-		ProcFuncPtr proc_func[Flags::num_attribs];
+		std::vector<ProcFuncPtr> proc_func;
+    int attrib_count;
 		MemoryProfile memp;
 		CPUProfile cpup;
 		FileProfile filep;
@@ -33,7 +34,7 @@ class Process{
 
 		
 	public:
-		Process(DWORD);
+		Process(DWORD, const std::array<bool, Flags::num_attribi>&);
 		Process(const Process&);
 		~Process();
 		void AppendAttrib(unsigned int);
@@ -42,6 +43,7 @@ class Process{
 		Process() = delete;
 		Process& operator=(const Process&) = delete;
     void GetName();
+    inline int CountAttribs() const { return attrib_count; }
 		void GenerateMemoryProfile();
 		void GenerateCPUProfile();
 		void GenerateOpenFileProfile();
