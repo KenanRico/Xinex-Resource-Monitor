@@ -10,9 +10,13 @@
 #define OK 0
 #define OPEN_PROC_FAILURE 1
 #define QUERY_MEMORY_FAILURE 2
+#define QUERY_PNAME_FAILURE 3
 
 
 Process::Process(DWORD pid): process_ID(pid), status(OK){
+	process_handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, process_ID);
+  GetName();
+  /*set up function ptr table*/
 	proc_func[Flags::MEMORY] = &Process::GenerateMemoryProfile;
 	proc_func[Flags::CPU] = &Process::GenerateCPUProfile;
 	proc_func[Flags::FILES] = &Process::GenerateOpenFileProfile;
@@ -21,11 +25,23 @@ Process::Process(DWORD pid): process_ID(pid), status(OK){
 
 Process::Process(const Process& rhs){
 	this->process_ID = rhs.process_ID;
+  this->process_name = rhs.process_name;
 	memcpy(this->proc_func, rhs.proc_func, sizeof(ProcFuncPtr)*Flags::num_attribs);
 }
 
 Process::~Process(){
 
+}
+
+#define BUFF_SIZE 1024
+void Process::GetName(){
+  CHAR buffer[BUFF_SIZE];
+  DWORD size = 0;
+  if(QueryFullProcessImageNameA(process_handle, 0, buffer, &size)){
+    process_name = std::string(buffer);
+  }else{
+		status = QUERY_PNAME_FAILURE;
+  }
 }
 
 void Process::AppendAttrib(unsigned int attrib){
@@ -40,7 +56,6 @@ void Process::AppendAttrib(unsigned int attrib){
 #define MEGABYTE 2062336.0f
 void Process::GenerateMemoryProfile(){
 	/*open process by pid*/
-	HANDLE proc_handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, this->process_ID);
 	if(proc_handle==nullptr){
 		status = OPEN_PROC_FAILURE;
 		return;

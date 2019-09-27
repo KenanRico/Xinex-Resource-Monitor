@@ -18,13 +18,17 @@ using ProcFuncPtr = void(Process::*)();
 
 class Process{
 	private:
+    /*process properties*/
 		DWORD process_ID;
 		std::string process_name;
+    HANDLE process_handle;
+    /*attribute resources*/
 		ProcFuncPtr proc_func[Flags::num_attribs];
 		MemoryProfile memp;
 		CPUProfile cpup;
 		FileProfile filep;
 		PortProfile portp;
+
 		uint8_t status;
 
 		
@@ -37,6 +41,7 @@ class Process{
 	private:
 		Process() = delete;
 		Process& operator=(const Process&) = delete;
+    void GetName();
 		void GenerateMemoryProfile();
 		void GenerateCPUProfile();
 		void GenerateOpenFileProfile();
