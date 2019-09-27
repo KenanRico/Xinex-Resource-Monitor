@@ -1,9 +1,11 @@
 #include <flags.h>
 #include <strfunc.h>
+#include <process.h>
 
 #include <array>
 #include <stdint.h>
 #include <iostream>
+#include <vector>
 
 
 int main(int argc, char** argv){
@@ -18,20 +20,26 @@ int main(int argc, char** argv){
 		// print help page
 	}
 
-	/*
-	std::vector<Process<Flags::num_attribs>> processes;
+	std::vector<Process> processes;
 	GetProcesses(&processes);
 
-	int proccount = processes.size();
-	for(int i=0; i<proccount; ++i){
+	unsigned int proccount = processes.size();
+	for(unsigned int i=0; i<proccount; ++i){
 		Process& proc = processes[i];
-		for(int j=0; j<Flags::X-1; ++j){
-			if(enabled_flag[j]){
+		for(unsigned int j=0; j<Flags::num_attribs; ++j){
+			if(enabled_flags[j]){
 				proc.AppendAttrib(j);
 			}
 		}
 	}
 
+	/*
+	for(unsigned int i=0; i<proccount; ++i){
+		std::cout<<processes[i].GetDisplay()<<"\n";
+	}
+	*/
+
+	/*
 	std::string info = AssembleForDisplay(enabled_flags, processes);
 	Display(info);
 	*/

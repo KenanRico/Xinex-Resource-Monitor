@@ -1,22 +1,31 @@
 #ifndef PROCESS_H
 #define PROCESS_H
 
-#include <flags.h>
+#include "flags.h"
+#include "memoryprofile.h"
+#include "cpuprofile.h"
+#include "fileprofile.h"
+#include "portprofile.h"
 
 #include <string>
 #include <windows.h>
 #include <vector>
+#include <stdint.h>
 
 
 class Process;
 using ProcFuncPtr = void(Process::*)();
 
-template <std::size_t N>
 class Process{
 	private:
 		DWORD process_ID;
-		ProcFuncPtr proc_func[N];
-		std::string msg;
+		std::string process_name;
+		ProcFuncPtr proc_func[Flags::num_attribs];
+		MemoryProfile memp;
+		CPUProfile cpup;
+		FileProfile filep;
+		PortProfile portp;
+		uint8_t status;
 
 		
 	public:
@@ -24,7 +33,7 @@ class Process{
 		Process(const Process&);
 		~Process();
 		void AppendAttrib(unsigned int);
-		inline const std::string& GetMsg() const { return msg; }
+		std::string GetDisplay() const;
 	private:
 		Process() = delete;
 		Process& operator=(const Process&) = delete;
@@ -34,6 +43,6 @@ class Process{
 		void GenerateOpenPortProfile();
 };
 
-void GetProcesses(std::vector<Process<Flags::num_attribs>>*);
+void GetProcesses(std::vector<Process>*);
 
 #endif

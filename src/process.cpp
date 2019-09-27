@@ -2,8 +2,9 @@
 #include <flags.h>
 
 #include <windows.h>
-#include <string.h>
+#include <string>
 #include <psapi.h>
+#include <stdio.h>
 
 
 #define OK 0
@@ -12,16 +13,15 @@
 
 
 Process::Process(DWORD pid): process_ID(pid), status(OK){
-	proc_func[Flags::MEMORY] = &Process::GenerateMemoryProfile();
-	proc_func[Flags::CPU] = &Process::GenerateCPUProfile();
-	proc_func[Flags::FILES] = &Process::GenerateOpenFileProfile();
-	proc_func[Flags::PORTS] = &Process::GenerateOpenPortProfile();
+	proc_func[Flags::MEMORY] = &Process::GenerateMemoryProfile;
+	proc_func[Flags::CPU] = &Process::GenerateCPUProfile;
+	proc_func[Flags::FILES] = &Process::GenerateOpenFileProfile;
+	proc_func[Flags::PORTS] = &Process::GenerateOpenPortProfile;
 }
 
 Process::Process(const Process& rhs){
 	this->process_ID = rhs.process_ID;
-	memcpy(this->proc_func, rhs.proc_func, sizeof(ProcFuncPtr)*N);
-	this->msg = rhs.msg;
+	memcpy(this->proc_func, rhs.proc_func, sizeof(ProcFuncPtr)*Flags::num_attribs);
 }
 
 Process::~Process(){
@@ -67,11 +67,17 @@ void Process::GenerateOpenPortProfile(){
 
 }
 
+std::string Process::GetDisplay() const{
+	char ID[32];
+	snprintf(ID, 32, "%d", (int)process_ID);
+	return std::string(ID); //placeholder
+}
+
 #define MAX_P_COUNT 1024
-void GetProcesses(std::vector<Process<Flags::num_attribs>>* processes){
+void GetProcesses(std::vector<Process>* processes){
 	DWORD process_pool[MAX_P_COUNT];
 	DWORD process_count_bytes;
-	EnumProcesses(process_pool, MAX_P_COUNT*sizeof(DWORD), &process_count);
+	EnumProcesses(process_pool, MAX_P_COUNT*sizeof(DWORD), &process_count_bytes);
 	unsigned int process_count = process_count_bytes/sizeof(DWORD);
 	for(DWORD i=0; i<process_count; ++i){
 		processes->push_back(Process(process_pool[i]));
