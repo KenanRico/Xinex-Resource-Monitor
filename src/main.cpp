@@ -20,23 +20,23 @@ int main(int argc, char** argv){
 		// print help page
 	}
 
+	Process::LoadFunctions(enabled_flags);
 	std::vector<Process> processes;
-	GetProcesses(&processes, enabled_flags);
+	GetProcesses(&processes);
+
 
 	unsigned int proccount = processes.size();
+	int attrib_count = Process::CountAttribs();
 	for(unsigned int i=0; i<proccount; ++i){
 		Process& proc = processes[i];
-    int attrib_count = proc->CountAttribs();
 		for(int j=0; j<attrib_count; ++j){
-      proc.AppendAttrib(j);
+			proc.AppendAttrib(j);
 		}
 	}
 
-	/*
 	for(unsigned int i=0; i<proccount; ++i){
 		std::cout<<processes[i].GetDisplay()<<"\n";
 	}
-	*/
 
 	/*
 	std::string info = AssembleForDisplay(enabled_flags, processes);

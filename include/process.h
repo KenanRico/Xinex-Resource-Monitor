@@ -11,6 +11,7 @@
 #include <windows.h>
 #include <vector>
 #include <stdint.h>
+#include <array>
 
 
 class Process;
@@ -18,32 +19,33 @@ using ProcFuncPtr = void(Process::*)();
 
 class Process{
 	private:
-    /*process properties*/
+		/*process properties*/
 		DWORD process_ID;
 		std::string process_name;
-    HANDLE process_handle;
-    /*attribute resources*/
-		std::vector<ProcFuncPtr> proc_func;
-    int attrib_count;
+		HANDLE process_handle;
+		/*attribute resources*/
 		MemoryProfile memp;
 		CPUProfile cpup;
 		FileProfile filep;
 		PortProfile portp;
-
 		uint8_t status;
+
+		static std::vector<ProcFuncPtr> proc_func;
+		static int attrib_count;
 
 		
 	public:
-		Process(DWORD, const std::array<bool, Flags::num_attribi>&);
+		Process(DWORD);
 		Process(const Process&);
 		~Process();
 		void AppendAttrib(unsigned int);
 		std::string GetDisplay() const;
+		static void LoadFunctions(const std::array<bool, Flags::X>&);
+		inline static int CountAttribs() { return attrib_count; }
 	private:
 		Process() = delete;
 		Process& operator=(const Process&) = delete;
-    void GetName();
-    inline int CountAttribs() const { return attrib_count; }
+		void GetName();
 		void GenerateMemoryProfile();
 		void GenerateCPUProfile();
 		void GenerateOpenFileProfile();
