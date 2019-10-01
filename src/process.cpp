@@ -62,6 +62,12 @@ void Process::GenerateMemoryProfile(){
 	if(GetProcessMemoryInfo(process_handle, &pmc, sizeof(pmc))){
 		//std::stringstream str_builder;
 		//str_builder<<"Memory: "<<"|page-fault-count="<<(float)pmc.PageFaultCount/MEGABYTE<<"|working-set="<<(float)pmc.WorkingSetSize/MEGABYTE<<"|peak-working-set="<<(float)pmc.PeakWorkingSetSize/MEGABYTE<<"|commited-memory-size="<<(float)pmc.PagefileUsage/MEGABYTE<<"|\n";
+		memp.SetProfile(
+			(float)pmc.PageFaultCount/MEGABYTE,
+			(float)pmc.WorkingSetSize/MEGABYTE,
+			(float)pmc.PeakWorkingSetSize/MEGABYTE,
+			(float)pmc.PagefileUsage/MEGABYTE
+		);
 	}else{
 		status = QUERY_MEMORY_FAILURE;
 	}
