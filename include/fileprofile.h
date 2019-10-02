@@ -1,5 +1,5 @@
-#ifndef FILE_PROFILE
-#define FILE_PROFILE
+#ifndef FILE_PROFILE_H
+#define FILE_PROFILE_H
 
 struct FileProfile{
 	int placeholder;

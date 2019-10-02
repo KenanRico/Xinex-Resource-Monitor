@@ -1,5 +1,5 @@
-#ifndef MEMORY_PROFILE
-#define MEMORY_PROFILE
+#ifndef MEMORY_PROFILE_H
+#define MEMORY_PROFILE_H
 
 struct MemoryProfile{
 	float page_fault_count;
