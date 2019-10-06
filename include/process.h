@@ -42,6 +42,7 @@ class Process{
 		std::string GetDisplay() const;
 		static void LoadFunctions(const std::array<bool, Flags::X>&);
 		inline static int CountAttribs() { return attrib_count; }
+		inline Status() const { return status; }
 	private:
 		Process() = delete;
 		Process& operator=(const Process&) = delete;

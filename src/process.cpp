@@ -5,12 +5,13 @@
 #include <string>
 #include <psapi.h>
 #include <stdio.h>
+#include <tlhelp32.h>
 
 
-#define OK 0
-#define OPEN_PROC_FAILURE 1
-#define QUERY_MEMORY_FAILURE 2
-#define QUERY_PNAME_FAILURE 3
+#define OK 0x0
+#define OPEN_PROC_FAILURE 0x1
+#define QUERY_MEMORY_FAILURE 0x2
+#define QUERY_PNAME_FAILURE 0x4
 
 
 std::vector<ProcFuncPtr> Process::proc_func;
@@ -20,7 +21,7 @@ Process::Process(DWORD pid): process_ID(pid), status(OK){
 	/*get hanle and name*/
 	process_handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, process_ID);
 	if(process_handle==nullptr){
-		status = OPEN_PROC_FAILURE;
+		status |= OPEN_PROC_FAILURE;
 		return;
 	}
 	GetName();
@@ -43,7 +44,7 @@ void Process::GetName(){
 	if(GetModuleFileNameEx(process_handle, 0, buffer, size)){
 		process_name = std::string(buffer);
 	}else{
-		status = QUERY_PNAME_FAILURE;
+		status |= QUERY_PNAME_FAILURE;
 	}
 }
 
@@ -56,6 +57,7 @@ void Process::AppendAttrib(unsigned int attrib){
  *require Psapi.lib
  *require -DPSAPI_VERSION=1 compile flag
  */
+#include <iostream>
 #define MEGABYTE 2062336.0f
 void Process::GenerateMemoryProfile(){
 	PROCESS_MEMORY_COUNTERS pmc;
@@ -63,17 +65,41 @@ void Process::GenerateMemoryProfile(){
 		//std::stringstream str_builder;
 		//str_builder<<"Memory: "<<"|page-fault-count="<<(float)pmc.PageFaultCount/MEGABYTE<<"|working-set="<<(float)pmc.WorkingSetSize/MEGABYTE<<"|peak-working-set="<<(float)pmc.PeakWorkingSetSize/MEGABYTE<<"|commited-memory-size="<<(float)pmc.PagefileUsage/MEGABYTE<<"|\n";
 		memp.SetProfile(
-			(float)pmc.PageFaultCount/MEGABYTE,
-			(float)pmc.WorkingSetSize/MEGABYTE,
-			(float)pmc.PeakWorkingSetSize/MEGABYTE,
-			(float)pmc.PagefileUsage/MEGABYTE
+			//(float)pmc.PageFaultCount/MEGABYTE,
+			//(float)pmc.WorkingSetSize/MEGABYTE,
+			//(float)pmc.PeakWorkingSetSize/MEGABYTE,
+			//(float)pmc.PagefileUsage/MEGABYTE
+			(float)pmc.PageFaultCount,
+			(float)pmc.WorkingSetSize,
+			(float)pmc.PeakWorkingSetSize,
+			(float)pmc.PagefileUsage
 		);
 	}else{
-		status = QUERY_MEMORY_FAILURE;
+		std::cout<<"error: "<<GetLastError()<<"\n";
+		status |= QUERY_MEMORY_FAILURE;
 	}
 }
 
 void Process::GenerateCPUProfile(){
+	/*get number of threads*/
+	int thread_count = 0;
+	{
+		HANDLE thread_walk_handle = CreateToolhelp32Snapshot(TH32CS_SNAPTHREAD, this->process_ID);
+		if(thread_walk_handle!=INVALID_HANDLE_VALUE){
+			THREADENTRY32 te;
+			te.dwSize = sizeof(te);
+			if(Thread32First(thread_walk_handle, &te)){
+				thread_count = 1;
+				while(Thread32Next(thread_walk_handle, &te)){
+					++thread_count;
+				}
+			}
+		}
+		CloseHandle(thread_walk_handle);
+	}
+
+	/*get number of cores used*/
+	int core_count = 0;
 
 }
 
@@ -88,11 +114,11 @@ void Process::GenerateOpenPortProfile(){
 std::string Process::GetDisplay() const{
 	char ID[32];
 	snprintf(ID, 32, "%d", (int)process_ID);
-	return std::string(ID)+" : "+process_name; //placeholder
+	return std::string(ID)+" : "+process_name+" "+memp.ToString(); //placeholder
 }
 
 void Process::LoadFunctions(const std::array<bool, Flags::X>& enabled){
-	for(int i=0; i<Flags::X; ++i){
+	for(unsigned int i=0; i<Flags::X; ++i){
 		if(enabled[i]){
 			switch(i){
 				case Flags::CPU:

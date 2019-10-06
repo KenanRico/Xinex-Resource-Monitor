@@ -31,6 +31,10 @@ int main(int argc, char** argv){
 		Process& proc = processes[i];
 		for(int j=0; j<attrib_count; ++j){
 			proc.AppendAttrib(j);
+			if(proc.Status()!=0){
+				std::cout<<"status: "<<proc.Status()<<"\n";
+				exit(0);
+			}
 		}
 	}
 

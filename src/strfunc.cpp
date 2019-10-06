@@ -18,7 +18,7 @@ uint8_t ParseFlags(int argc, char** argv, std::array<bool, Flags::X>* flags){
 	for(int i=1; i<argc; ++i){
 		if(argv[i][0]=='-'){
 			bool match = false;
-			for(int j=0; j<Flags::X; ++j){
+			for(unsigned int j=0; j<Flags::X; ++j){
 				if(strcmp(&argv[i][1], Flags::table[j].c_str())==0){
 					(*flags)[j] = true;
 					match = true;
