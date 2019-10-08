@@ -39,9 +39,8 @@ Process::~Process(){
 #define BUFF_SIZE 1024
 void Process::GetName(){
 	CHAR buffer[BUFF_SIZE];
-	DWORD size = BUFF_SIZE;
 	//if(QueryFullProcessImageName(process_handle, 0, buffer, &size)){
-	if(GetModuleFileNameEx(process_handle, 0, buffer, size)){
+	if(GetModuleFileNameEx(process_handle, 0, buffer, BUFF_SIZE)){
 		process_name = std::string(buffer);
 	}else{
 		status |= QUERY_PNAME_FAILURE;
@@ -65,14 +64,10 @@ void Process::GenerateMemoryProfile(){
 		//std::stringstream str_builder;
 		//str_builder<<"Memory: "<<"|page-fault-count="<<(float)pmc.PageFaultCount/MEGABYTE<<"|working-set="<<(float)pmc.WorkingSetSize/MEGABYTE<<"|peak-working-set="<<(float)pmc.PeakWorkingSetSize/MEGABYTE<<"|commited-memory-size="<<(float)pmc.PagefileUsage/MEGABYTE<<"|\n";
 		memp.SetProfile(
-			//(float)pmc.PageFaultCount/MEGABYTE,
-			//(float)pmc.WorkingSetSize/MEGABYTE,
-			//(float)pmc.PeakWorkingSetSize/MEGABYTE,
-			//(float)pmc.PagefileUsage/MEGABYTE
-			(float)pmc.PageFaultCount,
-			(float)pmc.WorkingSetSize,
-			(float)pmc.PeakWorkingSetSize,
-			(float)pmc.PagefileUsage
+			(float)pmc.PageFaultCount/MEGABYTE,
+			(float)pmc.WorkingSetSize/MEGABYTE,
+			(float)pmc.PeakWorkingSetSize/MEGABYTE,
+			(float)pmc.PagefileUsage/MEGABYTE
 		);
 	}else{
 		std::cout<<"error: "<<GetLastError()<<"\n";
