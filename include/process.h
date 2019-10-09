@@ -38,6 +38,8 @@ class Process{
 		Process(DWORD);
 		Process(const Process&);
 		~Process();
+		Process& operator=(const Process&);
+
 		void AppendAttrib(unsigned int);
 		std::string GetDisplay() const;
 		static void LoadFunctions(const std::array<bool, Flags::X>&);
@@ -45,7 +47,6 @@ class Process{
 		inline Status() const { return status; }
 	private:
 		Process() = delete;
-		Process& operator=(const Process&) = delete;
 		void GetName();
 		void GenerateMemoryProfile();
 		void GenerateCPUProfile();

@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 
 int main(int argc, char** argv){
@@ -25,6 +26,13 @@ int main(int argc, char** argv){
 	GetProcesses(&processes);
 
 
+	/*Neglect all kernel processes and other processes with access restriction*/
+	processes.erase(
+		std::remove_if(processes.begin(), processes.end(), [](const Process& proc){return proc.Status()!=0x0;}),
+		processes.end()
+	);
+
+	/*iterate processes to populate their performance profile*/
 	unsigned int proccount = processes.size();
 	int attrib_count = Process::CountAttribs();
 	for(unsigned int i=0; i<proccount; ++i){

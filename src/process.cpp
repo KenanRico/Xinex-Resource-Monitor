@@ -17,6 +17,7 @@
 std::vector<ProcFuncPtr> Process::proc_func;
 int Process::attrib_count = 0;
 
+#include <iostream>
 Process::Process(DWORD pid): process_ID(pid), status(OK){
 	/*get hanle and name*/
 	process_handle = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, process_ID);
@@ -30,6 +31,16 @@ Process::Process(DWORD pid): process_ID(pid), status(OK){
 Process::Process(const Process& rhs){
 	this->process_ID = rhs.process_ID;
 	this->process_name = rhs.process_name;
+	this->process_handle = rhs.process_handle;
+	this->status = rhs.status;
+}
+
+Process& Process::operator=(const Process& rhs){
+	this->process_ID = rhs.process_ID;
+	this->process_name = rhs.process_name;
+	this->process_handle = rhs.process_handle;
+	this->status = rhs.status;
+	return *this;
 }
 
 Process::~Process(){
@@ -70,7 +81,9 @@ void Process::GenerateMemoryProfile(){
 			(float)pmc.PagefileUsage/MEGABYTE
 		);
 	}else{
-		std::cout<<"error: "<<GetLastError()<<"\n";
+		if(GetLastError()==ERROR_INVALID_HANDLE){
+
+		}
 		status |= QUERY_MEMORY_FAILURE;
 	}
 }
@@ -145,7 +158,8 @@ void GetProcesses(std::vector<Process>* processes){
 	DWORD process_count_bytes;
 	EnumProcesses(process_pool, MAX_P_COUNT*sizeof(DWORD), &process_count_bytes);
 	unsigned int process_count = process_count_bytes/sizeof(DWORD);
-	for(DWORD i=0; i<process_count; ++i){
+	processes->reserve(process_count);
+	for(unsigned int i=0; i<process_count; ++i){
 		processes->push_back(Process(process_pool[i]));
 	}
 }
