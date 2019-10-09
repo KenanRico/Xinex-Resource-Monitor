@@ -44,7 +44,7 @@ Process& Process::operator=(const Process& rhs){
 }
 
 Process::~Process(){
-
+	CloseHandle(process_handle);
 }
 
 #define BUFF_SIZE 1024
@@ -75,7 +75,7 @@ void Process::GenerateMemoryProfile(){
 		//std::stringstream str_builder;
 		//str_builder<<"Memory: "<<"|page-fault-count="<<(float)pmc.PageFaultCount/MEGABYTE<<"|working-set="<<(float)pmc.WorkingSetSize/MEGABYTE<<"|peak-working-set="<<(float)pmc.PeakWorkingSetSize/MEGABYTE<<"|commited-memory-size="<<(float)pmc.PagefileUsage/MEGABYTE<<"|\n";
 		memp.SetProfile(
-			(float)pmc.PageFaultCount/MEGABYTE,
+			pmc.PageFaultCount,
 			(float)pmc.WorkingSetSize/MEGABYTE,
 			(float)pmc.PeakWorkingSetSize/MEGABYTE,
 			(float)pmc.PagefileUsage/MEGABYTE
@@ -106,7 +106,7 @@ void Process::GenerateCPUProfile(){
 		CloseHandle(thread_walk_handle);
 	}
 
-	/*get number of cores used*/
+	/*get percentage cpu usage*/
 	int core_count = 0;
 
 }

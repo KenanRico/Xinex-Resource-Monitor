@@ -5,11 +5,11 @@
 #include <sstream>
 
 struct MemoryProfile{
-	float page_fault_count;
+	unsigned int page_fault_count;
 	float working_set;
 	float peak_working_set;
 	float page_file_usage;
-	void SetProfile(float pfc, float ws, float pws, float pfu){
+	void SetProfile(unsigned int pfc, float ws, float pws, float pfu){
 		page_fault_count = pfc;
 		working_set = ws;
 		peak_working_set = pws;
