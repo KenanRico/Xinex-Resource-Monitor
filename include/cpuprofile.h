@@ -3,11 +3,9 @@
 
 struct CPUProfile{
 	int thread_count;
-	int core_occupancy;
 	float cpu_usage;
-	void SetProfile(int tc, int co, float cu){
+	void SetProfile(int tc, float cu){
 		thread_count = tc;
-		core_occupancy = co;
 		cpu_usage = cu;
 	}
 };
