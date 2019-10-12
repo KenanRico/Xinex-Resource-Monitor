@@ -44,7 +44,7 @@ Process& Process::operator=(const Process& rhs){
 }
 
 Process::~Process(){
-	CloseHandle(process_handle);
+
 }
 
 #define BUFF_SIZE 1024
@@ -82,7 +82,6 @@ void Process::GenerateMemoryProfile(){
 		);
 	}else{
 		if(GetLastError()==ERROR_INVALID_HANDLE){
-
 		}
 		status |= QUERY_MEMORY_FAILURE;
 	}
@@ -107,7 +106,7 @@ void Process::GenerateCPUProfile(){
 	}
 
 	/*get percentage cpu usage*/
-	int core_count = 0;
+	float cpu_usage = 0.0f;
 
 }
 
@@ -151,6 +150,12 @@ void Process::LoadFunctions(const std::array<bool, Flags::X>& enabled){
 		}
 	}
 }
+
+void Process::CleanUp(){
+	CloseHandle(process_handle);
+}
+
+
 
 #define MAX_P_COUNT 1024
 void GetProcesses(std::vector<Process>* processes){

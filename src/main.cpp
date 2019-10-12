@@ -41,13 +41,14 @@ int main(int argc, char** argv){
 			proc.AppendAttrib(j);
 			if(proc.Status()!=0){
 				std::cout<<"status: "<<proc.Status()<<"\n";
-				exit(0);
+				//exit(0);
 			}
 		}
 	}
 
 	for(unsigned int i=0; i<proccount; ++i){
 		std::cout<<processes[i].GetDisplay()<<"\n";
+		processes[i].CleanUp();
 	}
 
 	/*

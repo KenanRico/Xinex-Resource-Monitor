@@ -43,6 +43,7 @@ class Process{
 		void AppendAttrib(unsigned int);
 		std::string GetDisplay() const;
 		static void LoadFunctions(const std::array<bool, Flags::X>&);
+		void CleanUp();
 		inline static int CountAttribs() { return attrib_count; }
 		inline Status() const { return status; }
 	private:
