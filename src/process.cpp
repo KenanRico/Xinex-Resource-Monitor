@@ -6,6 +6,12 @@
 #include <psapi.h>
 #include <stdio.h>
 #include <tlhelp32.h>
+#include <ws2tcpip.h>
+#include <iphlpapi.h>
+#include <winsock2.h>
+
+#pragma comment(lib, "iphlpapi.lib")
+#pragma comment(lib, "ws2_32.lib")
 
 
 #define OK 0x0
@@ -115,7 +121,26 @@ void Process::GenerateOpenFileProfile(){
 }
 
 void Process::GenerateOpenPortProfile(){
+	MIB_TCPTABLE2 tcp_table;
+	ULONG req_table_size = sizeof(MIB_TCPTABLE2);
+	if(GetTcpTable2(&tcp_table, &req_table_size, TRUE)==ERROR_INSUFFICIENT_BUFFER){
+		return;
+	}
 
+	int table_size = (int)tcp_table.dwNumEntries;
+	for(int i=0; i<table_size; ++i){
+		//get port occupancy info
+		MIB_TCPROW2& row = tcp_table.table[i];
+		if(row.OwningPid==process_ID){
+			portp.Set(
+				(unsigned int)row.dwLocalAddr,
+				(unsigned int)row.dwLocalPort,
+				(unsigned int)row.dwRemoteAddr,
+				(unsigned int)row.dwRemotePort,
+			);
+			break;
+		}
+	}
 }
 
 std::string Process::GetDisplay() const{
