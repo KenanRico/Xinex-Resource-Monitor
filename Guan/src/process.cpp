@@ -1,14 +1,15 @@
+#include <WinSock2.h>
+
 #include <process.h>
 #include <flags.h>
 
-#include <windows.h>
 #include <string>
 #include <psapi.h>
 #include <stdio.h>
 #include <tlhelp32.h>
+#include <winpack.h>
 #include <ws2tcpip.h>
 #include <iphlpapi.h>
-#include <winsock2.h>
 
 #pragma comment(lib, "iphlpapi.lib")
 #pragma comment(lib, "ws2_32.lib")
@@ -18,6 +19,7 @@
 #define OPEN_PROC_FAILURE 0x1
 #define QUERY_MEMORY_FAILURE 0x2
 #define QUERY_PNAME_FAILURE 0x4
+#define QUERY_TCPTABLE_FAILURE 0x8
 
 
 std::vector<ProcFuncPtr> Process::proc_func;
@@ -56,8 +58,9 @@ Process::~Process(){
 #define BUFF_SIZE 1024
 void Process::GetName(){
 	CHAR buffer[BUFF_SIZE];
-	//if(QueryFullProcessImageName(process_handle, 0, buffer, &size)){
-	if(GetModuleFileNameEx(process_handle, 0, buffer, BUFF_SIZE)){
+	int size = BUFF_SIZE;
+	//if(QueryFullProcessImageName(process_handle, 0, (LPWSTR)buffer, (PDWORD)&size)){
+	if(GetModuleFileNameEx(process_handle, 0, (LPWSTR)buffer, BUFF_SIZE)){
 		process_name = std::string(buffer);
 	}else{
 		status |= QUERY_PNAME_FAILURE;
@@ -121,22 +124,28 @@ void Process::GenerateOpenFileProfile(){
 }
 
 void Process::GenerateOpenPortProfile(){
-	MIB_TCPTABLE2 tcp_table;
+
+	PMIB_TCPTABLE2 tcp_table = nullptr;
 	ULONG req_table_size = sizeof(MIB_TCPTABLE2);
-	if(GetTcpTable2(&tcp_table, &req_table_size, TRUE)==ERROR_INSUFFICIENT_BUFFER){
+	tcp_table = (PMIB_TCPTABLE2)malloc(req_table_size);
+	GetTcpTable2(tcp_table, &req_table_size, FALSE);
+	free(tcp_table);
+	tcp_table = (PMIB_TCPTABLE2)malloc(req_table_size);
+	if(GetTcpTable2(tcp_table, &req_table_size, FALSE)==ERROR_INSUFFICIENT_BUFFER){
+		status |= QUERY_TCPTABLE_FAILURE;
 		return;
 	}
 
-	int table_size = (int)tcp_table.dwNumEntries;
+	int table_size = (int)tcp_table->dwNumEntries;
 	for(int i=0; i<table_size; ++i){
 		//get port occupancy info
-		MIB_TCPROW2& row = tcp_table.table[i];
-		if(row.OwningPid==process_ID){
-			portp.Set(
+		MIB_TCPROW2& row = tcp_table->table[i];
+		if(row.dwOwningPid==process_ID){
+			portp.Add(
 				(unsigned int)row.dwLocalAddr,
 				(unsigned int)row.dwLocalPort,
 				(unsigned int)row.dwRemoteAddr,
-				(unsigned int)row.dwRemotePort,
+				(unsigned int)row.dwRemotePort
 			);
 			break;
 		}
@@ -146,7 +155,7 @@ void Process::GenerateOpenPortProfile(){
 std::string Process::GetDisplay() const{
 	char ID[32];
 	snprintf(ID, 32, "%d", (int)process_ID);
-	return std::string(ID)+" : "+process_name+" "+memp.ToString(); //placeholder
+	return std::string(ID)+=" : "+process_name+" "+memp.ToString()+"\n"+portp.ToString(); //placeholder
 }
 
 void Process::LoadFunctions(const std::array<bool, Flags::X>& enabled){

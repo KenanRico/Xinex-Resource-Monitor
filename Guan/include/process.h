@@ -6,9 +6,9 @@
 #include "cpuprofile.h"
 #include "fileprofile.h"
 #include "portprofile.h"
+#include "winpack.h"
 
 #include <string>
-#include <windows.h>
 #include <vector>
 #include <stdint.h>
 #include <array>
@@ -45,7 +45,7 @@ class Process{
 		static void LoadFunctions(const std::array<bool, Flags::X>&);
 		void CleanUp();
 		inline static int CountAttribs() { return attrib_count; }
-		inline Status() const { return status; }
+		inline uint8_t Status() const { return status; }
 	private:
 		Process() = delete;
 		void GetName();
