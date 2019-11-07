@@ -154,15 +154,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\cpuprofile.h" />
+    <ClInclude Include="include\debugfunc.h" />
     <ClInclude Include="include\fileprofile.h" />
     <ClInclude Include="include\flags.h" />
     <ClInclude Include="include\memoryprofile.h" />
     <ClInclude Include="include\portprofile.h" />
     <ClInclude Include="include\process.h" />
     <ClInclude Include="include\strfunc.h" />
-    <ClInclude Include="winpack.h" />
+    <ClInclude Include="include\winpack.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\debugfunc.cpp" />
     <ClCompile Include="src\Guan.cpp" />
     <ClCompile Include="src\process.cpp" />
     <ClCompile Include="src\strfunc.cpp" />

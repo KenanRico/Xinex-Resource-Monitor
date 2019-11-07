@@ -36,7 +36,10 @@
     <ClInclude Include="include\strfunc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="winpack.h">
+    <ClInclude Include="include\debugfunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\winpack.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\strfunc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\debugfunc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,7 @@
 # ignore all bin files
-*
-!.gitignore
-!Guan.sln
-!Guan/
+.vs/
+Guan/x64/
+x64/
+#!.gitignore
+#!Guan.sln
+#!Guan/

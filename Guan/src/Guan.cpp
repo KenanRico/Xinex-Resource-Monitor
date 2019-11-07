@@ -3,6 +3,7 @@
 #include <flags.h>
 #include <strfunc.h>
 #include <process.h>
+#include <debugfunc.h>
 
 #include <array>
 #include <stdint.h>
@@ -12,6 +13,8 @@
 
 
 int main(int argc, char** argv){
+	DEBUG::check_procname_calls();
+	DEBUG::check_tcptable_calls();
 	/*parse flags*/
 	std::array<bool, Flags::X> enabled_flags;
 	uint8_t status = ParseFlags(argc, argv, &enabled_flags);
@@ -35,7 +38,7 @@ int main(int argc, char** argv){
 	);
 
 	/*iterate processes to populate their performance profile*/
-	unsigned int proccount = processes.size();
+	size_t proccount = processes.size();
 	int attrib_count = Process::CountAttribs();
 	for(unsigned int i=0; i<proccount; ++i){
 		Process& proc = processes[i];
