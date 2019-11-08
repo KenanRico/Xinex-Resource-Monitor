@@ -13,8 +13,6 @@
 
 
 int main(int argc, char** argv){
-	DEBUG::check_procname_calls();
-	DEBUG::check_tcptable_calls();
 	/*parse flags*/
 	std::array<bool, Flags::X> enabled_flags;
 	uint8_t status = ParseFlags(argc, argv, &enabled_flags);
@@ -26,18 +24,20 @@ int main(int argc, char** argv){
 		// print help page
 	}
 
+	/* swap this
 	Process::LoadFunctions(enabled_flags);
 	std::vector<Process> processes;
 	GetProcesses(&processes);
-
-
-	/*Neglect all kernel processes and other processes with access restriction*/
 	processes.erase(
 		std::remove_if(processes.begin(), processes.end(), [](const Process& proc){return proc.Status()!=0x0;}),
 		processes.end()
 	);
+	*///with this
+	Processes processes;
+	processes.ConfigureByFlags(enabled_flags);
+	processes.GetProcesses();
 
-	/*iterate processes to populate their performance profile*/
+	/*swap this
 	size_t proccount = processes.size();
 	int attrib_count = Process::CountAttribs();
 	for(unsigned int i=0; i<proccount; ++i){
@@ -50,11 +50,16 @@ int main(int argc, char** argv){
 			}
 		}
 	}
+	*///with this
+	processes.GenProfile();
 
+	/*swap this
 	for(unsigned int i=0; i<proccount; ++i){
 		std::cout<<processes[i].GetDisplay()<<"\n";
 		processes[i].CleanUp();
 	}
+	*///with this
+	processes.CleanUp();
 
 	/*
 	std::string info = AssembleForDisplay(enabled_flags, processes);

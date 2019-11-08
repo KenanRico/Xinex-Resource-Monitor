@@ -59,8 +59,8 @@ Process::~Process(){
 void Process::GetName(){
 	CHAR buffer[BUFF_SIZE];
 	int size = BUFF_SIZE;
-	//if(QueryFullProcessImageName(process_handle, 0, (LPWSTR)buffer, (PDWORD)&size)){
-	if(GetModuleFileNameEx(process_handle, 0, (LPWSTR)buffer, BUFF_SIZE)){
+	if(QueryFullProcessImageNameA(process_handle, 0, (LPWSTR)buffer, (PDWORD)&size)){
+	//if(GetModuleFileNameEx(process_handle, 0, (LPWSTR)buffer, BUFF_SIZE)){
 		process_name = std::string(buffer);
 	}else{
 		status |= QUERY_PNAME_FAILURE;

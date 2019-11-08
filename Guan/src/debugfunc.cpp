@@ -9,7 +9,7 @@
 
 
 
-#define DEBUGGING 1
+#define DEBUGGING 0
 
 
 #if DEBUGGING==1
