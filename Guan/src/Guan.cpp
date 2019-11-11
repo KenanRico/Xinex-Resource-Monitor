@@ -4,6 +4,7 @@
 #include <strfunc.h>
 #include <process.h>
 #include <debugfunc.h>
+#include <processes.h>
 
 #include <array>
 #include <stdint.h>
@@ -14,7 +15,7 @@
 
 int main(int argc, char** argv){
 	/*parse flags*/
-	std::array<bool, Flags::X> enabled_flags;
+	std::array<bool, Flags::X> enabled_flags = {0};
 	uint8_t status = ParseFlags(argc, argv, &enabled_flags);
 	if(status!=0){
 		std::cout<<"Error!\n";
@@ -51,7 +52,7 @@ int main(int argc, char** argv){
 		}
 	}
 	*///with this
-	processes.GenProfile();
+	processes.GenProfiles();
 
 	/*swap this
 	for(unsigned int i=0; i<proccount; ++i){
@@ -65,6 +66,9 @@ int main(int argc, char** argv){
 	std::string info = AssembleForDisplay(enabled_flags, processes);
 	Display(info);
 	*/
+
+	std::cout<<processes.Display();
+
 
 	return 0;
 }
