@@ -1,9 +1,7 @@
 
-//#include <pch.h>
 #include <flags.h>
 #include <strfunc.h>
 #include <process.h>
-#include <debugfunc.h>
 #include <processes.h>
 
 #include <array>
@@ -35,24 +33,9 @@ int main(int argc, char** argv){
 	);
 	*///with this
 	Processes processes;
-	processes.ConfigureByFlags(enabled_flags);
 	processes.GetProcesses();
 
-	/*swap this
-	size_t proccount = processes.size();
-	int attrib_count = Process::CountAttribs();
-	for(unsigned int i=0; i<proccount; ++i){
-		Process& proc = processes[i];
-		for(int j=0; j<attrib_count; ++j){
-			proc.AppendAttrib(j);
-			if(proc.Status()!=0){
-				std::cout<<"status: "<<(int)proc.Status()<<"\n";
-				exit(0);
-			}
-		}
-	}
-	*///with this
-	processes.GenProfiles();
+	processes.GenProfiles(enabled_flags);
 
 	/*swap this
 	for(unsigned int i=0; i<proccount; ++i){

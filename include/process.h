@@ -6,7 +6,6 @@
 #include "cpuprofile.h"
 #include "fileprofile.h"
 #include "portprofile.h"
-#include "winpack.h"
 
 #include <string>
 #include <vector>
@@ -14,12 +13,13 @@
 #include <array>
 
 
+class Processes;
+
 class Process{
 	public:
 		/*process properties*/
-		DWORD process_ID;
+		uint32_t process_ID;
 		std::string process_name;
-		HANDLE process_handle;
 	private:
 		/*attribute resources*/
 		MemoryProfile memp;
@@ -29,18 +29,17 @@ class Process{
 		uint8_t status;
 
 	public:
-		Process(DWORD);
+		Process(const std::string&);
 		Process(const Process&);
 		~Process();
 		Process& operator=(const Process&);
 		std::string GetDisplay() const;
 		void CleanUp();
-		void AddToMemoryProfile(DWORD, float, float, float);
+		void AddToMemoryProfile(unsigned int, float, float, float);
 		void AddToPortProfile(unsigned int, unsigned int, unsigned int, unsigned int);
 		inline uint8_t Status() const { return status; }
 	private:
 		Process() = delete;
-		void GetName();
 
 	friend class Processes;
 };

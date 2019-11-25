@@ -1,18 +1,16 @@
 #ifndef PORT_PROFILE_H
 #define PORT_PROFILE_H
 
-#include <winpack.h>
 #include <sstream>
-
 #include <vector>
 
 struct PortProfile{
 
 	struct Connection{
-		DWORD local_host;
-		DWORD local_port;
-		DWORD remote_host;
-		DWORD remote_port;
+		unsigned int local_host;
+		unsigned int local_port;
+		unsigned int remote_host;
+		unsigned int remote_port;
 		Connection(unsigned int lh, unsigned int lp, unsigned int rh, unsigned int rp) {
 			local_host = lh;
 			local_port = lp;
@@ -28,7 +26,7 @@ struct PortProfile{
 	}
 	
 	private:
-	std::string PrintableIP(DWORD host) const {
+	std::string PrintableIP(unsigned int host) const {
 		std::stringstream ss;
 		ss
 			<< ((host >> 0) & 0xff) << '.'
@@ -41,7 +39,7 @@ struct PortProfile{
 	public:
 	std::string ToString() const {
 		std::stringstream ss;
-		for (int i = 0; i < connections.size(); ++i) {
+		for (unsigned int i = 0; i < connections.size(); ++i) {
 			ss<<
 				PrintableIP(connections[i].local_host)<<" "<<
 				connections[i].local_port<<" "<<

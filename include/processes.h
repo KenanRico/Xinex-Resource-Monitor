@@ -8,7 +8,6 @@
 #include <array>
 #include <string>
 #include <stdint.h>
-#include <iphlpapi.h>
 
 
 class Processes;
@@ -18,15 +17,13 @@ class Processes{
 	private:
 		std::vector<Process> processes;
 		std::vector<ProcFuncPtr> proc_func;
-		PMIB_TCPTABLE2 tcp_table;
 		unsigned int attrib_count;
 		uint32_t status; //32 flags
 	public:
 		Processes();
 		~Processes();
 		void GetProcesses();
-		void ConfigureByFlags(const std::array<bool, Flags::X>&);
-		void GenProfiles();
+		void GenProfiles(const std::array<bool, Flags::X>&);
 		void CleanUp();
 		std::string Display() const;
 		inline unsigned int CountAttribs() const { return attrib_count; }
