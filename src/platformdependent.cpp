@@ -74,6 +74,22 @@ void Processes::GenerateOpenPortProfile(Process* process){
 /*=============================== Process functions ===============================*/
 Process::Process(const std::string& proc_stat_str): status(0x0){
 
+	/*
+		pid
+		name
+		state
+		ppid
+		pgroup
+		session
+		controlling terminal
+		foreground process group of terminal
+		kernel flags
+		minflt
+		cminflt
+		number of major faults
+		(52 fields in total...)
+	*/
+
 	//get process ID
 	process_ID = 100;
 
