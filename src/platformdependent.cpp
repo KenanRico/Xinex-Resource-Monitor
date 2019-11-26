@@ -4,6 +4,7 @@
 #include <experimental/filesystem>
 #include <fstream>
 #include <string.h>
+#include <sstream>
 
 
 
@@ -90,11 +91,24 @@ Process::Process(const std::string& proc_stat_str): status(0x0){
 		(52 fields in total...)
 	*/
 
+  /*parse proc stat string into various fields*/
+  std::stringstream ss(proc_stat_str);
+  unsigned int pid = 0; ss >> pid;
+  std::string proc_name = ""; ss >> proc_name;
+  unsigned char state = 0; ss >> state;
+  long long other_fields[52];
+  for(unsigned int i=3; i<52; ++i){
+    ss>>other_fields[i];
+  }
+
 	//get process ID
-	process_ID = 100;
+	process_ID = pid;
 
 	//get process name
-	process_name = "place holder";
+	process_name = proc_name;
+
+  //gen profiles
+  memp.SetProfile(other_fields[9], other_fields[11], other_fields[22], other_fields[35]);
 }
 
 

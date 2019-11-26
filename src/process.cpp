@@ -17,13 +17,10 @@ Process::Process(const Process& rhs){
 	this->process_ID = rhs.process_ID;
 	this->process_name = rhs.process_name;
 	this->status = rhs.status;
-}
-
-Process& Process::operator=(const Process& rhs){
-	this->process_ID = rhs.process_ID;
-	this->process_name = rhs.process_name;
-	this->status = rhs.status;
-	return *this;
+  this->cpup = rhs.cpup;
+  this->memp = rhs.memp;
+  this->portp = rhs.portp;
+  this->filep = rhs.filep;
 }
 
 Process::~Process(){

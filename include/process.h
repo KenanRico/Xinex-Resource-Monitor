@@ -32,7 +32,6 @@ class Process{
 		Process(const std::string&);
 		Process(const Process&);
 		~Process();
-		Process& operator=(const Process&);
 		std::string GetDisplay() const;
 		void CleanUp();
 		void AddToMemoryProfile(unsigned int, float, float, float);
@@ -40,6 +39,7 @@ class Process{
 		inline uint8_t Status() const { return status; }
 	private:
 		Process() = delete;
+		Process& operator=(const Process&) = delete;
 
 	friend class Processes;
 };
