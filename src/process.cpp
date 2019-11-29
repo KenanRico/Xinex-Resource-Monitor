@@ -34,14 +34,3 @@ std::string Process::GetDisplay() const{
 	return std::string(ID)+=" : "+process_name+" "+memp.ToString()+"\n"+portp.ToString(); //placeholder
 }
 
-
-
-
-
-void Process::AddToMemoryProfile(unsigned int pfc, float ws, float pws, float pfu){
-	memp.SetProfile(pfc, ws, pws, pfu);
-}
-
-void Process::AddToPortProfile(unsigned int lh, unsigned int lp, unsigned int rh, unsigned int rp){
-	portp.Add(lh, lp, rh, rp);
-}

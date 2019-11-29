@@ -108,7 +108,8 @@ Process::Process(const std::string& proc_stat_str): status(0x0){
 	process_name = proc_name;
 
   //gen profiles
-  memp.SetProfile(other_fields[9], other_fields[11], other_fields[22], other_fields[35]);
+  memp.SetProfile(other_fields[9], other_fields[11], other_fields[22], other_fields[23], other_fields[35]);
+  cpup.SetProfile(other_fields[13], other_fields[14], other_fields[18], other_fields[19], other_fields[38]);
 }
 
 

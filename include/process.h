@@ -34,8 +34,6 @@ class Process{
 		~Process();
 		std::string GetDisplay() const;
 		void CleanUp();
-		void AddToMemoryProfile(unsigned int, float, float, float);
-		void AddToPortProfile(unsigned int, unsigned int, unsigned int, unsigned int);
 		inline uint8_t Status() const { return status; }
 	private:
 		Process() = delete;
