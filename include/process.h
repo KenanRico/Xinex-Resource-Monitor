@@ -11,6 +11,7 @@
 #include <vector>
 #include <stdint.h>
 #include <array>
+#include <unordered_map>
 
 
 class Processes;
@@ -20,6 +21,7 @@ class Process{
 		/*process properties*/
 		uint32_t process_ID;
 		std::string process_name;
+		std::string process_state;
 	private:
 		/*attribute resources*/
 		MemoryProfile memp;
@@ -27,6 +29,7 @@ class Process{
 		FileProfile filep;
 		PortProfile portp;
 		uint8_t status;
+		static std::unordered_map<char, std::string> state;
 
 	public:
 		Process(const std::string&);

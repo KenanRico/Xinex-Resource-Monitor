@@ -13,14 +13,25 @@
 
 
 
+std::unordered_map<char, std::string> Process::state(
+	{
+		{'R', "running"},
+		{'S', "sleeping"},
+		{'T', "stopped"},
+		{'Z', "zombie"},
+		{'X', "dead"}
+	}
+);
+
 Process::Process(const Process& rhs){
 	this->process_ID = rhs.process_ID;
 	this->process_name = rhs.process_name;
+	this->process_state = rhs.process_state;
 	this->status = rhs.status;
-  this->cpup = rhs.cpup;
-  this->memp = rhs.memp;
-  this->portp = rhs.portp;
-  this->filep = rhs.filep;
+	this->cpup = rhs.cpup;
+	this->memp = rhs.memp;
+	this->portp = rhs.portp;
+	this->filep = rhs.filep;
 }
 
 Process::~Process(){
@@ -31,6 +42,6 @@ Process::~Process(){
 std::string Process::GetDisplay() const{
 	char ID[32];
 	snprintf(ID, 32, "%d", (int)process_ID);
-	return std::string(ID)+=" : "+process_name+" "+memp.ToString()+"\n"+portp.ToString(); //placeholder
+	return std::string(ID)+=" : "+process_name+" "+process_state+" "+memp.ToString()+cpup.ToString()+"\n"; //placeholder
 }
 

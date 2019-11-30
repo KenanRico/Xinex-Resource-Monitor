@@ -91,15 +91,15 @@ Process::Process(const std::string& proc_stat_str): status(0x0){
 		(52 fields in total...)
 	*/
 
-  /*parse proc stat string into various fields*/
-  std::stringstream ss(proc_stat_str);
-  unsigned int pid = 0; ss >> pid;
-  std::string proc_name = ""; ss >> proc_name;
-  unsigned char state = 0; ss >> state;
-  long long other_fields[52];
-  for(unsigned int i=3; i<52; ++i){
-    ss>>other_fields[i];
-  }
+	/*parse proc stat string into various fields*/
+	std::stringstream ss(proc_stat_str);
+	unsigned int pid = 0; ss >> pid;
+	std::string proc_name = ""; ss >> proc_name;
+	unsigned char statec = 0; ss >> statec;
+	long long other_fields[52];
+	for(unsigned int i=3; i<52; ++i){
+		ss>>other_fields[i];
+	}
 
 	//get process ID
 	process_ID = pid;
@@ -107,9 +107,11 @@ Process::Process(const std::string& proc_stat_str): status(0x0){
 	//get process name
 	process_name = proc_name;
 
-  //gen profiles
-  memp.SetProfile(other_fields[9], other_fields[11], other_fields[22], other_fields[23], other_fields[35]);
-  cpup.SetProfile(other_fields[13], other_fields[14], other_fields[18], other_fields[19], other_fields[38]);
+	process_state = state[statec];
+
+	//gen profiles
+	memp.SetProfile(other_fields[9], other_fields[11], other_fields[22], other_fields[23], other_fields[35]);
+	cpup.SetProfile(other_fields[13], other_fields[14], other_fields[18], other_fields[19], other_fields[38]);
 }
 
 
